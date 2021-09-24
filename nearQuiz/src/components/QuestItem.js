@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import {Button,Row,Col} from 'react-bootstrap';
 const QuestItem = (props) => {
     const [ quest, setQuest ] = useState(props.quest);
     const [submitAns, setSubmitAns] = useState();
@@ -19,27 +20,59 @@ const QuestItem = (props) => {
     return (
         <div>
         <form onSubmit={handleQuestSubmit}>
+        <Row>
+            <Col>
             <label>
-              Question Number:
+              Question number:
+            </label>
+            </Col>
+            <Col>
               <input type="text" value={quest.id} readOnly={true} />
-            </label>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <label>
-              Question :
-              <input type="text" value={quest.question} readOnly={true}/>
+              Question detail:
             </label>
+            </Col>
+            <Col>
+              <input type="text" value={quest.question} readOnly={true} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <label>
               Answer 1:
-              <input type="text" value={quest.choice1} readOnly={true}/>
             </label>
+            </Col>
+            <Col>
+              <input type="text" value={quest.choice1} readOnly={true}/>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <label>
               Answer 2:
-              <input type="text" value={quest.choice2} readOnly={true}/>
             </label>
+            </Col>
+            <Col>
+              <input type="text" value={quest.choice2} readOnly={true} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <label>
-              Your answer:
-              <input type="text" onChange={handleAnswerChange} />
+              YOur Answer :
             </label>
-            <input type="submit" value="Submit" />
+            </Col>
+            <Col>
+              <input type="text" onChange={handleAnswerChange} />
+            </Col>
+          </Row>
+          <Row>
+            <Button variant="success" onClick={handleQuestSubmit}>Submit</Button>
+          </Row>
           </form>
         </div>
     )

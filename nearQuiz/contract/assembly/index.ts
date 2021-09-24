@@ -83,7 +83,6 @@ export function answerQuestion(_quest_id: u32, _choice: i32): boolean {
     return true;
   }
   else {
-    let author = getAuthorByQuestion(_quest_id);
     ContractPromiseBatch.create(author).transfer(DEFAULT_REWARD);
     return false;
   }

@@ -60,26 +60,52 @@ function App() {
         <div className="justify-content-center">
           <h2> Add Question </h2>
           <form onSubmit={handleSubmit}>
+          <Row>
+            <Col>
             <label>
               Question:
-              <input type="text" value={question} onChange={handleQuestionChange} />
             </label>
+            </Col>
+            <Col>
+              <input type="text" value={question} onChange={handleQuestionChange} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <label>
               Answer 1:
-              <input type="text" value={choice1} onChange={handleChoice1Change} />
             </label>
+            </Col>
+            <Col>
+              <input type="text" value={choice1} onChange={handleChoice1Change} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <label>
               Answer 2:
-              <input type="text" value={choice2} onChange={handleChoice2Change} />
             </label>
+            </Col>
+            <Col>
+              <input type="text" value={choice2} onChange={handleChoice2Change} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
             <label>
               Right answer:
-              <input type="text" value={answer} onChange={handleAnswerChange} />
             </label>
-            <input type="submit" value="Submit" />
+            </Col>
+            <Col>
+              <input type="text" value={answer} onChange={handleAnswerChange} />
+            </Col>
+          </Row>
+          <Row>
+            <Button variant="success" onClick={handleSubmit}>Submit</Button>
+          </Row>
           </form>
         </div>
-        <Button variant="success" onClick={showList}>List Question</Button>
+        <Button variant="info" onClick={showList}>List Question</Button>
         <div>
           {fetch == true ?(
           listQuestion.map(quest=>(

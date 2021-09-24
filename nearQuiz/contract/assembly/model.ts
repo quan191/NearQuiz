@@ -5,7 +5,8 @@ export class Questions {
   owner: string;
   question: string;
   answer: i32;
-  choice: Array<string>;
+  choice1: string;
+  choice2: string;
   reward: u128;
 
   constructor(
@@ -13,14 +14,16 @@ export class Questions {
     _owner: string,
     _question: string,
     _answer: i32,
-    _choice: Array<string>,
+    _choice1: string,
+    _choice2: string,
     _reward: u128
   ) {
     this.id = _id;
     this.owner = _owner;
     this.question = _question;
     this.answer = _answer;
-    this.choice = _choice;
+    this.choice1 = _choice1;
+    this.choice2 = _choice2;
     this.reward = _reward;
   }
 

@@ -12,32 +12,8 @@
  *
  */
 
-import { Context, logging, storage,context, u128, PersistentVector, ContractPromiseBatch, PersistentMap  } from 'near-sdk-as'
+import { Context, logging,context, u128, PersistentVector, ContractPromiseBatch, PersistentMap  } from 'near-sdk-as'
 
-const DEFAULT_MESSAGE = 'Hello'
-
-// Exported functions will be part of the public interface for your smart contract.
-// Feel free to extract behavior to non-exported functions!
-export function getGreeting(accountId: string): string | null {
-  // This uses raw `storage.get`, a low-level way to interact with on-chain
-  // storage for simple contracts.
-  // If you have something more complex, check out persistent collections:
-  // https://docs.near.org/docs/concepts/data-storage#assemblyscript-collection-types
-  return storage.get<string>(accountId, DEFAULT_MESSAGE)
-}
-
-export function setGreeting(message: string): void {
-  const account_id = Context.sender
-
-  // Use logging.log to record logs permanently to the blockchain!
-  logging.log(
-    // String interpolation (`like ${this}`) is a work in progress:
-    // https://github.com/AssemblyScript/assemblyscript/pull/1115
-    'Saving greeting "' + message + '" for account "' + account_id + '"'
-  )
-
-  storage.set(account_id, message)
-}
 
 import { Questions} from './model';
 
@@ -53,11 +29,12 @@ const DEFAULT_REWARD: u128 = u128.from("1000000000000000000000000"); // 1 NEAR
  */
 export function addQuestion(
   _question: string,
-  _choice: Array<string>,
+  _choice1: string,
+  _choice2: string,
   _answer: i32
 ): void {
   let id = QuestionVector.length + 1;
-  const question = new Questions(id,context.sender,_question,_answer,_choice,DEFAULT_REWARD);
+  const question = new Questions(id,context.sender,_question,_answer,_choice1,_choice2,DEFAULT_REWARD);
   assert(context.accountBalance >= DEFAULT_REWARD, "You don't have enough near to give reward");
   QuestionVector.push(question);
   logging.log("add question" + question.getQuestion());
@@ -74,11 +51,11 @@ export function getListQuestion(): Array<Questions> {
 }
 
 export function getAuthorByQuestion(_id: u32): string {
-  return QuestionVector[_id].owner;
+  return QuestionVector[_id-1].owner;
 }
 
 export function getAnswer(_id: u32): i32 {
-  return QuestionVector[_id].answer
+  return QuestionVector[_id-1].answer
 }
 /**
  * add Bounty to contract if u loose
@@ -94,9 +71,7 @@ export function getWinnerList(_id: u32): Array<string> {
 /**
  * answer the question
  */
-export function answerQuestion(_quest_id: u32, _choice: i32): void {
-  assert(QuestionVector[_quest_id].reward > DEFAULT_REWARD, "Cannot answer this question");
-  assert(getWinnerList(_quest_id).includes(context.sender)!=true, "YOu have already answer the question");
+export function answerQuestion(_quest_id: u32, _choice: i32): boolean {
 
   let author = getAuthorByQuestion(_quest_id);
   assert(context.accountBalance >= DEFAULT_REWARD , "You don't have enough near to play");
@@ -104,9 +79,12 @@ export function answerQuestion(_quest_id: u32, _choice: i32): void {
   let answer = getAnswer(_quest_id);
   if (_choice == answer) {
     // get reward
-    WinnerListMap.getSome(_quest_id).push(context.sender);
+    ContractPromiseBatch.create(Context.sender).transfer(DEFAULT_REWARD);
+    return true;
   }
   else {
-    addLostBounty(author);
+    let author = getAuthorByQuestion(_quest_id);
+    ContractPromiseBatch.create(author).transfer(DEFAULT_REWARD);
+    return false;
   }
 }
